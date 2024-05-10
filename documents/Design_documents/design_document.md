@@ -17,10 +17,10 @@
 |     |     | password   | パスワード       | VARCHAR(100) |                   | NO       |                          |
 |     |     | created_at | 管理者登録日時   | TIMESTANP    | CURRENT_TIMESTAMP | NO       |                          |
 |     |     | undated_at | 管理者更新日     | TIMESTANP    | CURRENT_TIMESTAMP | NO       |                          |
-#### ユニーク制約
+**ユニーク制約**
 - username (ユーザー名はユニークでなければならない)
 - login_id (ログインIDはユニークでなければならない)
-#### その他の制約
+**その他の制約**
 - password (パスワードには最低8文字以上の制約を設ける)
 
 ### groups
@@ -29,7 +29,7 @@
 | 〇  |                       | id             |                              | INT          |        | NO       |                                        |
 |     |                       | group_name     | グループ名                   | VARCHAR(100) |        | NO       |                                        |
 |     | 〇（usersテーブルID） | leader_user_id | グループリーダーのユーザーID | INT          |        | YES      | TRUE（リーダーユーザーID検索の高速化） |
-#### ユニーク制約
+**ユニーク制約**
 - group_name (グループ名はユニークでなければならない)
 
 ### user_groups
@@ -38,7 +38,7 @@
 | 〇  |                        | id       |                                            | INT      |        | NO       |              |
 |     | 〇（usersテーブルID）  | user_id  | ユーザーIDの外部キー(usersテーブルを参照)  | INT      |        | NO       |              |
 |     | 〇（groupsテーブルID） | group_id | グループIDの外部キー(groupsテーブルを参照) | INT      |        | NO       |              |
-#### ユニーク制約
+**ユニーク制約**
 - user_id, group_id (ユーザーとグループの組み合わせはユニークでなければならない)
 
 ### reports
@@ -61,7 +61,7 @@
 |     |                               | reply_created_at | 返信作成日時                               | DATETIME     |                         | YES      |                                                    |
 |     |                               | is_reply_status  | 返信の完了状態 0:未完了,  1 : 完了         | BOOLEAN      | false（登録時は未完了） | NO       |                                                    |
 |     |                               | is_published     | 報告の公開状態 0:下書き, 1:公開            | BOOLEAN      |                         | NO       |                                                    |                      |
-#### インデックス制約
+**インデックス制約**
 - 追加：(user_id, group_id) (ユーザーIDとグループIDの組み合わせでの検索を高速化)
 
 ### read_statuses
@@ -72,7 +72,7 @@
 |     | FK2 | user_id    | ユーザーIDの外部キー(usersテーブルを参照)                     | INT      |             | NO       | user_id (ユーザーIDでの検索を高速化)    |
 |     |     | is_read    | レポートが読まれたかどうかのフラグ(TRUE: 読んだ、FALSE: 未読) | BOOLEAN  | FALSE: 未読 | NO       |                                         |
 |     |     | read_at    | レポートが読まれた日時(NULLを許容)                            | DATETIME |             | YES      |                                         |
-#### インデックス制約
+**インデックス制約**
 - 追加：(reports_id, user_id) (レポートIDとユーザーIDの組み合わせでの検索を高速化)
 
 ## システム構成図

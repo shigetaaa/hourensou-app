@@ -60,8 +60,8 @@
 |     |     | reply_memo          | 欲しい返事に関するメモ                     | VARCHAR  |                         | YES      |              |
 |     |     | reply_limit         | 返信期限                                   | DATE     |                         | YES      |              |
 |     |     | is_report_published | 報告の公開状態 0:下書き, 1:公開            | BOOLEAN  | false（登録時は下書き） | NO       |              |
-|     |     | reply_content       | 返信                                       | TEXT     |                         |          |              |
-|     |     | is_reply_published  | 返信の公開状態 0:下書き, 1:公開            | BOOLEAN  | false（登録時は未完了） | NO       |              |                              |                      |
+|     |     | reply_content       | 返信                                       | TEXT     |                         | YES      |              |
+|     |     | is_reply_published  | 返信の公開状態 0:下書き, 1:公開            | BOOLEAN  | false（登録時は未完了） | NO       |              |
 #### インデックス制約
 - 追加：(user_id, group_id) (ユーザーIDとグループIDの組み合わせでの検索を高速化)
 

@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('read_statuses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('reports_id');
+            $table->unsignedBigInteger('user_id');
+            $table->boolean('is_read')->default(false);
+
+            $table->foreign('reports_id')->references('id')->on('reports');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->index(['reports_id', 'user_id']); // 複合インデックス設定
+
             $table->timestamps();
         });
     }

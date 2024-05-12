@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use illuminate\Database\Eloquent\Model; //追加
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -43,5 +45,22 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * このユーザーが所属するグループ
+     */
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'user_groups')->withTimestamps();
+    }
+
+    /**
+     * このユーザーが既読した状況を管理
+     */
+    public function read_report(): BelongsToMany
+    {
+        return $this->belongsToMany(Report::class, 'read_statuses')->withPivot('is_read')->withTimestamps();
     }
 }

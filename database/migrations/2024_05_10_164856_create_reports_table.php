@@ -25,12 +25,14 @@ return new class extends Migration
             $table->tinyInteger('reply_type')->nullable();
             $table->text('reply_memo')->nullable();
             $table->dateTime('reply_limit')->nullable();
-            $table->boolean('is_published');
+            $table->boolean('is_report_published')->default(false);
+            $table->text('reply_content')->nullable();
+            $table->boolean('is_reply_published')->default(false);
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('group_id')->references('id')->on('groups');
 
-            $table->index(['user_id', 'group_id']);
+            $table->index(['user_id', 'group_id']); // 複合インデックス設定
 
             $table->timestamps();
         });

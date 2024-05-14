@@ -20,7 +20,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        // 'email',
+        'username',
+        'login_id',
         'password',
     ];
 
@@ -46,6 +48,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * このユーザーが複数の報告を投稿できる
+     */
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
+    }
+
 
     /**
      * このユーザーが所属するグループ

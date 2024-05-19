@@ -43,4 +43,21 @@ class Report extends Model
     {
         return $this->belongsToMany(User::class, 'read_statuses')->withPivot('is_read')->withTimestamps();
     }
+
+    /**
+     * すべての報告を取得
+     */
+    public function getAllReports()
+    {
+        return $this->orderBy('date', 'desc')->get();
+    }
+
+
+    /**
+     * グループ別の報告一覧を取得
+     */
+    public function getGroupReports($group_id)
+    {
+        return $this->where('group_id', $group_id)->orderBy('date', 'desc')->get();
+    }
 }

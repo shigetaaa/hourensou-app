@@ -20,7 +20,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        // 'email',
         'username',
         'login_id',
         'password',
@@ -59,7 +58,7 @@ class User extends Authenticatable
 
 
     /**
-     * このユーザーが所属するグループ
+     * このユーザーが所属するグループを取得する
      */
 
     public function groups(): BelongsToMany

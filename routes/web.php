@@ -7,7 +7,6 @@ use Inertia\Inertia;
 use App\Http\Controllers\ReportController; //追加
 
 
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -18,16 +17,9 @@ Route::resource('/', ReportController::class)
     ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
+// ルートディレクトリの表示：現在はグループごとの報グループごとの報告のみ表示→showGroupReports
+Route::get('/', [ReportController::class, 'showGroupReports'])->name('welcome');
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome');
-//      [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]
-// });
 
 
 Route::middleware('auth')->group(function () {

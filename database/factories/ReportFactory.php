@@ -17,11 +17,21 @@ class ReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->numberBetween(1, 2),
+            'user_id' => $this->faker->numberBetween(1, 4),
             'group_id' => $this->faker->numberBetween(1, 4),
-            'title' => $this->faker->sentence,
-            'content' => $this->faker->paragraph,
+            'date' => $this->faker->dateTimeBetween('-1 years', 'now'),
+            'title' => $this->faker->realText($maxNbChars = 30),
+            'what' => $this->faker->realText($maxNbChars = 100),
+            'who' => $this->faker->realText($maxNbChars = 30),
+            'when' => $this->faker->realText($maxNbChars = 30),
+            'where' => $this->faker->realText($maxNbChars = 30),
+            'memo' => $this->faker->realText($maxNbChars = 100),
+            'reply_type' => $this->faker->numberBetween(1, 3),
+            'reply_memo' => $this->faker->realText($maxNbChars = 100),
+            'reply_limit' => $this->faker->dateTimeBetween('now', '+1 years'),
+            'reply_content' => $this->faker->realText($maxNbChars = 100),
             'is_report_published' => true,
+            'reply_content' => $this->faker->realText($maxNbChars = 100),
             'is_reply_published' => true,
         ];
     }

@@ -20,7 +20,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Display a listing of all reports.
+     * すべての報告を表示
      */
     public function showAllReports()
     {
@@ -34,14 +34,8 @@ class ReportController extends Controller
     }
 
     /**
-     * Display a listing of reports for the specified group.
+     * グループごとの報告を表示
      */
-    // public function showGroupReports($group_id)
-    // {
-    //     $report = new Report();
-    //     $reports = $report->getGroupReports($group_id);
-    //     return Inertia::render('GroupReports', ['reports' => $reports]);
-    // }
 
     public function showGroupReports()
     {
@@ -58,6 +52,17 @@ class ReportController extends Controller
 
         return Inertia::render('Welcome', ['groupReports' => $groupReports]);
     }
+
+    /**
+     * 個別の報告を表示
+     */
+    public function showReport($id)
+    {
+        $report = Report::with('group')->findOrFail($id);
+
+        return Inertia::render('ReportDetail', ['report' => $report]);
+    }
+
 
 
 
@@ -77,13 +82,7 @@ class ReportController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Report $report)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.

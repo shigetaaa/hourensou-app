@@ -52,6 +52,14 @@ class Report extends Model
         return $this->orderBy('date', 'desc')->get();
     }
 
+    /**
+     * グループとのリレーション
+     */
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
+
 
     /**
      * グループ別の報告一覧を取得

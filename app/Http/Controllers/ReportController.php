@@ -39,12 +39,40 @@ class ReportController extends Controller
 
     public function showGroupReports()
     {
-        $user = auth()->user(); // 現在のログインユーザーを取得
+        // 現在のログインユーザーを取得
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
 
         $groupReports = [];
 
         foreach ($user->groups as $group) {
-            $groupReports[$group->group_name] = $group->reports()->orderBy('date', 'desc')->get();
+            // ページ番号取得
+            $page = request()->input("page_{$group->id}", 1);
+
+            // グループごとの報告取得
+            $reports = $group->reports()->orderBy('date', 'desc')->paginate(5, ['*'], "page_{$group->id}", $page);
+
+            // Inertia使用：blade専用変数が使用できないので配列を定義
+            $groupReports[$group->group_name] = [
+                'data' => $reports->items(),
+                'links' => [
+                    'prev' => $reports->previousPageUrl(),
+                    'next' => $reports->nextPageUrl(),
+                ],
+                //meta情報が不要な場合は削除
+                'meta' => [
+                    'current_page' => $reports->currentPage(),
+                    'from' => $reports->firstItem(),
+                    'last_page' => $reports->lastPage(),
+                    'path' => $reports->path(),
+                    'per_page' => $reports->perPage(),
+                    'to' => $reports->lastItem(),
+                    'total' => $reports->total(),
+                ],
+            ];
         }
 
         // デバッグ用
@@ -62,6 +90,7 @@ class ReportController extends Controller
 
         return Inertia::render('ReportDetail', ['report' => $report]);
     }
+
 
 
 

@@ -1,11 +1,13 @@
 import '../../css/app.css';
 import '../../css/welcome.css';
 
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
+import { InertiaLink } from '@inertiajs/inertia-react';
 
-export type Reports = {
+
+type Reports = {
     id: number;
     date: string;
     title: string;
@@ -22,8 +24,27 @@ export type Reports = {
     is_reply_published: boolean;
 };
 
-// 以下表示が成功したコード
-const Welcome: FC<{ groupReports?: Record<string, Reports[]> }> = ({ groupReports }) => {
+type GroupReport = {
+    data: Reports[];
+    links: {
+        prev: string;
+        next: string;
+    };
+    meta: {
+        // メタデータの型定義をここに書く
+    };
+};
+
+type GroupReports = {
+    [groupName: string]: GroupReport;
+};
+
+
+
+const Welcome = ({ groupReports }: { groupReports: GroupReports }) => {
+    // デバッグ用
+    console.log(groupReports);
+
     if (!groupReports) {
         return <div>報告はありません。</div>;
     }
@@ -32,17 +53,43 @@ const Welcome: FC<{ groupReports?: Record<string, Reports[]> }> = ({ groupReport
             {Object.keys(groupReports).map((groupName) => (
                 <div key={groupName}>
                     <h2>{groupName}</h2>
-                    {groupReports[groupName].map((report) => (
+                    {groupReports[groupName].data.map((report) => (
                         <div key={report.id}>
-                            <Link href={`/reports/${report.id}`}>
-                                <h3>{report.date}</h3>
-                                <p>{report.title}</p>
-                            </Link>
+                            <div key={report.id}>
+                                <Link href={`/reports/${report.id}`}>
+                                    <h3>{report.date}</h3>
+                                    <p>{report.title}</p>
+                                </Link>
+                            </div>
                         </div>
                     ))}
+                    <div>
+                        {groupReports[groupName].links.prev && (
+                            <InertiaLink href={groupReports[groupName].links.prev}>&laquo; 前のページ</InertiaLink>
+                        )}
+                        {groupReports[groupName].links.next && (
+                            <InertiaLink href={groupReports[groupName].links.next}>次のページ &raquo;</InertiaLink>
+                        )}
+
+                    </div>
                 </div>
             ))}
         </div>
+
+        //     {Object.keys(groupReports).map((groupName) => (
+        //         <div key={groupName}>
+        //             <h2>{groupName}</h2>
+        //             {groupReports[groupName].map((report) => (
+        //                 <div key={report.id}>
+        //                     <Link href={`/reports/${report.id}`}>
+        //                         <h3>{report.date}</h3>
+        //                         <p>{report.title}</p>
+        //                     </Link>
+        //                 </div>
+        //             ))}
+        //         </div>
+        //     ))}
+        // </div>
     );
 };
 

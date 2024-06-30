@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Report>
@@ -19,6 +20,7 @@ class ReportFactory extends Factory
         return [
             'user_id' => $this->faker->numberBetween(1, 4),
             'group_id' => $this->faker->numberBetween(1, 4),
+            'random_id' => Str::lower(Str::random(10)),
             'date' => $this->faker->dateTimeBetween('-1 years', 'now'),
             'title' => $this->faker->realText($maxNbChars = 30),
             'what' => $this->faker->realText($maxNbChars = 100),

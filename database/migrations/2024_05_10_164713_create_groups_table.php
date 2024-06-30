@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('group_name', 100)->unique();
+            $table->string('group_slug', 100)->unique();
             $table->unsignedBigInteger('leader_user_id')->nullable()->index();
             $table->foreign('leader_user_id')->references('id')->on('users');
             $table->timestamps();

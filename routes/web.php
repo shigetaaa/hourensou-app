@@ -1,6 +1,6 @@
 <?php
 
-// use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,8 +26,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// ユーザーごとの記事一覧表示
+Route::get('/reports/{username}', [ReportController::class, 'showUsersReports'])->name('users.reports');
+
+
+
 
 // 個別記事表示
-Route::get('/reports/{id}', [ReportController::class, 'showReport'])->name('report.detail');
+Route::get('/reports/{username}/{group_slug}/{random_id}', [ReportController::class, 'showReport'])
+    ->name('report.detail');
+
 
 require __DIR__ . '/auth.php';

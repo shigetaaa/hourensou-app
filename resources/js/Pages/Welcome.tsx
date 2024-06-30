@@ -9,6 +9,8 @@ import { InertiaLink } from '@inertiajs/inertia-react';
 
 type Reports = {
     id: number;
+    username: string;
+    random_id: string;
     date: string;
     title: string;
     what: string;
@@ -22,10 +24,13 @@ type Reports = {
     is_report_published: boolean;
     reply_content: string;
     is_reply_published: boolean;
+    group_slug: string;
 };
 
 type GroupReport = {
     data: Reports[];
+    username: string;
+    group_slug: string;
     links: {
         prev: string;
         next: string;
@@ -53,16 +58,17 @@ const Welcome = ({ groupReports }: { groupReports: GroupReports }) => {
             {Object.keys(groupReports).map((groupName) => (
                 <div key={groupName}>
                     <h2>{groupName}</h2>
-                    {groupReports[groupName].data.map((report) => (
-                        <div key={report.id}>
+                    {groupReports[groupName].data.map((report) => {
+                        // console.log(report);  // ここを追加デバッグ用後で消す
+                        return (
                             <div key={report.id}>
-                                <Link href={`/reports/${report.id}`}>
+                                <Link href={`/${report.username}/reports/${groupReports[groupName].group_slug}/${report.random_id}`}>
                                     <h3>{report.date}</h3>
                                     <p>{report.title}</p>
                                 </Link>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                     <div>
                         {groupReports[groupName].links.prev && (
                             <InertiaLink href={groupReports[groupName].links.prev}>&laquo; 前のページ</InertiaLink>

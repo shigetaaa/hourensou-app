@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('group_id');
+            $table->string('random_id', 14)->unique();
             $table->date('date');
             $table->string('title', 100);
             $table->text('what')->nullable();

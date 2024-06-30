@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use App\Models\Report;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+
 
 class ReportController extends Controller
 {
@@ -46,52 +48,124 @@ class ReportController extends Controller
             return redirect()->route('login');
         }
 
-        $groupReports = [];
+        $usersGroupReports = [];
 
         foreach ($user->groups as $group) {
+            $group_slug = $group->group_slug;
             // ページ番号取得
             $page = request()->input("page_{$group->id}", 1);
 
             // グループごとの報告取得
             $reports = $group->reports()->orderBy('date', 'desc')->paginate(5, ['*'], "page_{$group->id}", $page);
 
+            // $data = $reports->getCollection();
+            $data = $reports->items();
+
+            foreach ($data as $report) {
+                $report->username = $report->user->username;
+            }
+
             // Inertia使用：blade専用変数が使用できないので配列を定義
             $groupReports[$group->group_name] = [
-                'data' => $reports->items(),
+
+                'data' => $data,
+                'group_slug' => $group->group_slug,
+
                 'links' => [
                     'prev' => $reports->previousPageUrl(),
                     'next' => $reports->nextPageUrl(),
                 ],
-                //meta情報が不要な場合は削除
-                'meta' => [
-                    'current_page' => $reports->currentPage(),
-                    'from' => $reports->firstItem(),
-                    'last_page' => $reports->lastPage(),
-                    'path' => $reports->path(),
-                    'per_page' => $reports->perPage(),
-                    'to' => $reports->lastItem(),
-                    'total' => $reports->total(),
-                ],
             ];
         }
-
-        // デバッグ用
-        // dd($groupReports);
 
         return Inertia::render('Welcome', ['groupReports' => $groupReports]);
     }
 
     /**
-     * 個別の報告を表示
+     * 各ユーザーのごと報告を表示
      */
-    public function showReport($id)
-    {
-        $report = Report::with('group')->findOrFail($id);
 
-        return Inertia::render('ReportDetail', ['report' => $report]);
+    //ルートパラメータを引数$usernameとして受け取る
+    public function showUsersReports(string $username)
+    {
+        // 現在のログインユーザーを取得
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $usersGroupReports = [];
+
+        foreach ($user->groups as $group) {
+            $group_slug = $group->group_slug;
+            // ページ番号取得
+            $page = request()->input("page_{$group->id}", 1);
+
+            // グループごとの報告取得
+            $reports = $group->reports()->orderBy('date', 'desc')->paginate(5, ['*'], "page_{$group->id}", $page);
+
+            // $data = $reports->getCollection();
+            $data = $reports->items();
+
+            foreach ($data as $report) {
+                $report->username = $report->user->username;
+            }
+
+            // Inertia使用：blade専用変数が使用できないので配列を定義
+            $usersGroupReports[$group->group_name] = [
+
+                'data' => $data,
+                'group_slug' => $group->group_slug,
+
+                'links' => [
+                    'prev' => $reports->previousPageUrl(),
+                    'next' => $reports->nextPageUrl(),
+                ],
+            ];
+        }
+
+        return Inertia::render('UsersReports', ['usersGroupReports' => $usersGroupReports]);
     }
 
 
+
+    /**
+     * 個別の報告を表示
+     */
+
+    public function showReport(string $username, string $group_slug, string $random_id)
+    {
+        // 現在のログインユーザーを取得
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $report = Report::with(['group', 'user'])
+            ->whereHas('user', function ($query) use ($username) {
+                $query->where('username', $username);
+            })
+            ->whereHas('group', function ($query) use ($group_slug) {
+                $query->where('group_slug', $group_slug);
+            })
+            ->where('random_id', $random_id)
+            ->first();
+
+        if (!$report) {
+            abort(404);
+        }
+
+        //ユーザーがレポートのグループに所属しているかを確認する
+        $isUserInGroup = $user->groups->contains('id', $report->group_id);
+
+        if (!$isUserInGroup) {
+            return Inertia::render('Error', ['message' => '表示できません。報告はグループメンバー限定で公開されています。']);
+        }
+
+        return Inertia::render('ReportDetail', ['report' => $report]);
+    }
 
 
 

@@ -14,6 +14,7 @@ class Report extends Model
     protected $fillable = [
         'user_id',
         'group_id',
+        'random_id',
         'date',
         'title',
         'what',
@@ -29,7 +30,7 @@ class Report extends Model
     ];
 
     /**
-     * この報告を投稿したユーザー
+     * ユーザーとのリレーション
      */
     public function user(): BelongsTo
     {
@@ -59,7 +60,6 @@ class Report extends Model
     {
         return $this->belongsTo(Group::class);
     }
-
 
     /**
      * グループ別の報告一覧を取得

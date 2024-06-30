@@ -12,11 +12,19 @@ class Group extends Model
     use HasFactory;
 
     /**
-     * このグループに所属するユーザー
+     * usersテーブルとuser_groupsテーブルのリレーション
      */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_groups')->withTimestamps();
+    }
+
+    /**
+     * usersテーブルとgroupsテーブルのリレーション
+     */
+    public function userGroup()
+    {
+        return $this->belongsToMany(User::class, 'user_group', 'user_id', 'group_id');
     }
 
     /**

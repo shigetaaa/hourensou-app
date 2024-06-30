@@ -10,6 +10,7 @@ import { PageProps } from '@/types';
 // 型定義
 export type Reports = {
   id: number;
+  random_id: string;
   date: string;
   title: string;
   what: string;
@@ -25,6 +26,7 @@ export type Reports = {
   is_reply_published: boolean;
   group: {
     id: number;
+    group_slug: string;
     group_name: string;
   };
 };

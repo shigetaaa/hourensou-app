@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('group_id');
-            $table->string('random_id', 14)->unique();
             $table->date('date');
             $table->string('title', 100);
             $table->text('what')->nullable();
@@ -25,7 +24,7 @@ return new class extends Migration
             $table->text('memo')->nullable();
             $table->tinyInteger('reply_type')->nullable();
             $table->text('reply_memo')->nullable();
-            $table->dateTime('reply_limit')->nullable();
+            $table->date('reply_limit')->nullable();
             $table->boolean('is_report_published')->default(false);
             $table->text('reply_content')->nullable();
             $table->boolean('is_reply_published')->default(false);

@@ -14,12 +14,12 @@ class Report extends Model
     protected $fillable = [
         'user_id',
         'group_id',
-        'random_id',
         'date',
         'title',
         'what',
         'who',
         'when',
+        'where',
         'memo',
         'reply_type',
         'reply_memo',

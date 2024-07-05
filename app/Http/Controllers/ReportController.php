@@ -6,6 +6,7 @@ use App\Models\Group;
 use App\Models\Report;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,10 +29,6 @@ class ReportController extends Controller
     {
         $report = new Report();
         $allReports = $report->getAllReports();
-
-        // デバッグ用に $allReports の内容を直接表示する
-        // dd($allReports);
-
         return Inertia::render('Welcome', ['reports' => $allReports]);
     }
 
@@ -134,7 +131,7 @@ class ReportController extends Controller
      * 個別の報告を表示
      */
 
-    public function showReport(string $username, string $group_slug, string $random_id)
+    public function showReport(string $username, string $group_slug, $id)
     {
         // 現在のログインユーザーを取得
         $user = auth()->user();
@@ -150,7 +147,7 @@ class ReportController extends Controller
             ->whereHas('group', function ($query) use ($group_slug) {
                 $query->where('group_slug', $group_slug);
             })
-            ->where('random_id', $random_id)
+            ->where('id', $id)
             ->first();
 
         if (!$report) {
@@ -168,13 +165,83 @@ class ReportController extends Controller
     }
 
 
+    /**
+     * 新規記事作成フォームの表示
+     */
+    public function createReport(string $username)
+    {
+        $user = auth()->user();
+
+        if (!$user || $user->username !== $username) {
+            return redirect()->route('login');
+        }
+
+        $userGroups = $user->groups;
+
+        if ($userGroups->isEmpty()) {
+            return Inertia::render('Error', ['message' => 'まだグループに参加していません。所属のグループリーダーに参加登録を依頼してください']);
+        }
+
+        $createReportData = [
+            'user' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'name' => $user->name,
+            ],
+            'groups' => $userGroups->map(function ($group) {
+                return [
+                    'id' => $group->id,
+                    'group_name' => $group->group_name,
+                    'group_slug' => $group->group_slug,
+                ];
+            }),
+        ];
+        return Inertia::render('CreateReport', $createReportData);
+    }
 
     /**
-     * Show the form for creating a new resource.
+     * 新規記事の保存
      */
-    public function create()
+
+    public function storeReport(Request $request, string $username, string $group_slug)
     {
-        //
+        $user = auth()->user();
+
+        if (!$user || $user->username !== $username) {
+            return redirect()->route('login');
+        }
+
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'title' => 'required|max:255',
+            'what' => 'required',
+            'who' => 'required',
+            'when' => 'required',
+            'where' => 'required',
+            'memo' => 'nullable',
+            'reply_type' => 'required',
+            'reply_memo' => 'nullable',
+            'reply_limit' => 'nullable|date',
+            'group_slug' => 'required|exists:groups,group_slug',
+            'is_published' => 'boolean',
+            'reply_content' => 'nullable',
+            'is_reply_published' => 'boolean',
+        ]);
+
+        $group = Group::where('group_slug', $validatedData['group_slug'])->firstOrFail();
+
+        $report = new Report($validatedData);
+        $report->user_id = $user->id;
+        $report->group_id = $group->id;
+        $report->is_report_published = $validatedData['is_published'];
+        $report->save();
+
+        $message = $report->is_report_published ? '記事を公開しました。' : '記事を下書き保存しました。';
+
+        return Inertia::render('ReportCreated', [
+            'message' => $message,
+            'report' => $report,
+        ]);
     }
 
     /**

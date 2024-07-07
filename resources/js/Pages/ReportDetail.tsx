@@ -1,16 +1,11 @@
 import '../../css/app.css';
-// import '../../css/welcome.css';
-
-
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { Link, Head } from '@inertiajs/react';
-import { PageProps } from '@/types';
-
+import { ChakraProvider, Container, Heading, Box, Flex, Text } from "@chakra-ui/react";
 
 // 型定義
 export type Reports = {
   id: number;
-  random_id: string;
   date: string;
   title: string;
   what: string;
@@ -32,22 +27,55 @@ export type Reports = {
 };
 
 const ReportDetail: FC<{ report?: Reports }> = ({ report }) => {
-  console.log(report);
   if (!report) {
     return <div>報告はありません。</div>;
   }
+
   return (
-    <div>
-      <h2>{report.group.group_name}</h2>
-      <div key={report.id}>
-        <h3>{report.date}</h3>
-        <p>{report.title}</p>
-      </div>
-    </div>
+    <ChakraProvider>
+      <Head title={`${report.title} - ${report.group.group_name}`} />
+      <Container maxW={{ base: "100%", md: "768px", lg: "1024px" }}>
+        <Box maxW="100%" mx="auto" p={5}>
+          <Flex direction="column">
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Box w='200px' bg='green.500' fontWeight="bold" pl={2} pr={2}>日付</Box>
+              <Box flex='1' bg='tomato' pl={2} pr={2}><Text>2024-07-03</Text></Box>
+            </Flex>
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Text fontWeight="bold">何をしましたか?</Text>
+              <Text>テスト1</Text>
+            </Flex>
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Text fontWeight="bold">だれが?</Text>
+              <Text>松田さん</Text>
+            </Flex>
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Text fontWeight="bold">いつ?</Text>
+              <Text>2 週間前</Text>
+            </Flex>
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Text fontWeight="bold">どこで?</Text>
+              <Text>テスト1</Text>
+            </Flex>
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Text fontWeight="bold">伝えたいこと聞きたいこと</Text>
+              <Text>テスト1</Text>
+            </Flex>
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Text fontWeight="bold">リーダーにしてほしいこと</Text>
+              <Text>2</Text>
+            </Flex>
+            <Flex direction={{ base: "column", md: "row" }}>
+              <Text fontWeight="bold">リーダーの返信</Text>
+              <Text>返信はまだです</Text>
+            </Flex>
+          </Flex>
+        </Box>
+      </Container>
+    </ChakraProvider>
+
+
   );
 };
-
-
-
 
 export default ReportDetail;

@@ -78,6 +78,7 @@ class ReportController extends Controller
         return Inertia::render('Welcome', ['groupReports' => $groupReports]);
     }
 
+
     /**
      * 各ユーザーのごと報告を表示
      */
@@ -200,7 +201,7 @@ class ReportController extends Controller
     }
 
     /**
-     * 新規記事の保存
+     * 新規報告の保存
      */
 
     public function storeReport(Request $request, string $username, string $group_slug)
@@ -244,22 +245,40 @@ class ReportController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
 
 
     /**
-     * Show the form for editing the specified resource.
+     * 報告の編集
      */
-    public function edit(Report $report)
+    public function editReport(string $username, string $group_slug, $id)
     {
-        //
+        $user = auth()->user();
+
+        if (!$user || $user->username !== $username) {
+            return redirect()->route('login');
+        }
+
+        $report = Report::with(['group', 'user'])
+            ->whereHas('user', function ($query) use ($username) {
+                $query->where('username', $username);
+            })
+            ->whereHas('group', function ($query) use ($group_slug) {
+                $query->where('group_slug', $group_slug);
+            })
+            ->where('id', $id)
+            ->first();
+
+        if (!$report) {
+            abort(404);
+        }
+
+        //ユーザーが作成した報告かを確認する
+        $isUserReport = $user->id === $report->user_id;
+        if (!$isUserReport) {
+            return Inertia::render('Error', ['message' => '編集できません。報告は作成者のみ編集できます。']);
+        }
+
+        return Inertia::render('editReport', ['report' => $report]);
     }
 
     /**

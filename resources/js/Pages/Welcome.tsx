@@ -2,6 +2,7 @@
 import '../../css/app.css';
 // import '../../css/welcome.css';
 
+import DefaultLayout from '../Layouts/DefaultLayout';
 import React, { FC, useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
@@ -9,6 +10,7 @@ import { InertiaLink } from '@inertiajs/inertia-react';
 import { ChakraProvider, Box, Container, Heading, Text, VStack, HStack, Link as ChakraLink, Flex, VisuallyHidden } from '@chakra-ui/react';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import theme from '../theme';
+
 
 
 
@@ -60,7 +62,8 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
     const groupNames = Object.keys(groupReports);
 
     return (
-        <ChakraProvider theme={theme}>
+        <DefaultLayout title="ホーム">
+            {/* <ChakraProvider theme={theme}> */}
             <Head title="Welcome" />
             <Container maxW={{ base: "100%", md: "768px", lg: "1024px" }}>
                 <Flex direction="column" minHeight="100vh">
@@ -100,10 +103,26 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
                                         </VStack>
                                         <HStack spacing={4} mt={4}>
                                             {groupReports[groupName].links.prev && (
-                                                <ChakraLink as={InertiaLink} href={groupReports[groupName].links.prev}>&laquo; 前のページ</ChakraLink>
+                                                <ChakraLink
+                                                    as={Link}
+                                                    href={groupReports[groupName].links.prev}
+                                                    preserveState
+                                                    preserveScroll
+                                                    only={[`groupReports.${groupName}`]}
+                                                >
+                                                    &laquo; 前のページ
+                                                </ChakraLink>
                                             )}
                                             {groupReports[groupName].links.next && (
-                                                <ChakraLink as={InertiaLink} href={groupReports[groupName].links.next}>次のページ &raquo;</ChakraLink>
+                                                <ChakraLink
+                                                    as={Link}
+                                                    href={groupReports[groupName].links.next}
+                                                    preserveState
+                                                    preserveScroll
+                                                    only={[`groupReports.${groupName}`]}
+                                                >
+                                                    次のページ &raquo;
+                                                </ChakraLink>
                                             )}
                                         </HStack>
                                     </TabPanel>
@@ -117,7 +136,8 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
                     </Box>
                 </Flex>
             </Container>
-        </ChakraProvider>
+            {/* </ChakraProvider> */}
+        </DefaultLayout>
     );
 };
 

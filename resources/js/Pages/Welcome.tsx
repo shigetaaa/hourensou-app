@@ -1,18 +1,14 @@
 
 import '../../css/app.css';
-// import '../../css/welcome.css';
 
 import DefaultLayout from '../Layouts/DefaultLayout';
 import React, { FC, useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { InertiaLink } from '@inertiajs/inertia-react';
-import { ChakraProvider, Box, Container, Heading, Text, VStack, HStack, Link as ChakraLink, Flex, VisuallyHidden } from '@chakra-ui/react';
+import { ChakraProvider, Box, Container, Heading, Text, VStack, HStack, Link as ChakraLink, Flex, VisuallyHidden, Button } from '@chakra-ui/react';
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import theme from '../theme';
-
-
-
 
 
 type Reports = {
@@ -62,17 +58,10 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
     const groupNames = Object.keys(groupReports);
 
     return (
-        <DefaultLayout title="ホーム">
-            {/* <ChakraProvider theme={theme}> */}
+        <DefaultLayout title="ホーム" auth={auth}>
             <Head title="Welcome" />
             <Container maxW={{ base: "100%", md: "768px", lg: "1024px" }}>
                 <Flex direction="column" minHeight="100vh">
-                    <Box as="header" bg="gray.100" py={4}>
-                        <Flex maxW="container.xl" mx="auto" px={4} justifyContent="space-between" alignItems="center">
-                            <Heading as="h1" size="lg">ほうれんそう</Heading>
-                            {auth && <Text>{auth.user.name}</Text>}
-                        </Flex>
-                    </Box>
 
                     <Box as="main" flex={1} p={5}>
                         {/* キーボード操作のガイダンス */}
@@ -136,7 +125,6 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
                     </Box>
                 </Flex>
             </Container>
-            {/* </ChakraProvider> */}
         </DefaultLayout>
     );
 };

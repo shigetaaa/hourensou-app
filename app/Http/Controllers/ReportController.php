@@ -33,51 +33,53 @@ class ReportController extends Controller
     }
 
     /**
-     * グループごとの報告を表示
+     * グループごとの報告を表示/ルートWelcomeページ
      */
-
-    public function showGroupReports()
+    public function showGroupReports(Request $request)
     {
-        // 現在のログインユーザーを取得
         $user = auth()->user();
 
         if (!$user) {
             return redirect()->route('login');
         }
 
-        $usersGroupReports = [];
+        $currentGroupId = $request->input('group_id');
+        $page = $request->input('page', 1);
+
+        $groupReports = [];
 
         foreach ($user->groups as $group) {
-            $group_slug = $group->group_slug;
-            // ページ番号取得
-            $page = request()->input("page_{$group->id}", 1);
+            $reports = $group->reports()->with('user')->orderBy('date', 'desc');
 
-            // グループごとの報告取得
-            $reports = $group->reports()->orderBy('date', 'desc')->paginate(5, ['*'], "page_{$group->id}", $page);
+            if ($group->id == $currentGroupId) {
+                $reports = $reports->paginate(5, ['*'], 'page', $page);
+            } else {
+                $reports = $reports->paginate(5);
+            }
 
-            // $data = $reports->getCollection();
             $data = $reports->items();
 
             foreach ($data as $report) {
                 $report->username = $report->user->username;
+                $report->name = $report->user->name;
             }
 
-            // Inertia使用：blade専用変数が使用できないので配列を定義
             $groupReports[$group->group_name] = [
-
                 'data' => $data,
                 'group_slug' => $group->group_slug,
+                'group_id' => $group->id,
 
                 'links' => [
                     'prev' => $reports->previousPageUrl(),
                     'next' => $reports->nextPageUrl(),
                 ],
+                'current_page' => $reports->currentPage(),
+                'last_page' => $reports->lastPage(),
             ];
         }
 
-        return Inertia::render('Welcome', ['groupReports' => $groupReports]);
+        return Inertia::render('Welcome', ['groupReports' => $groupReports, 'currentGroupId' => $currentGroupId]);
     }
-
 
     /**
      * 各ユーザーのごと報告を表示
@@ -162,7 +164,17 @@ class ReportController extends Controller
             return Inertia::render('Error', ['message' => '表示できません。報告はグループメンバー限定で公開されています。']);
         }
 
-        return Inertia::render('ReportDetail', ['report' => $report]);
+
+        // Inertia使用：blade専用変数が使用できないので配列を定義
+        $reportDetail = [
+            'data' => $report,
+            'group_name' => $report->group->group_name,
+            'name' => $report->user->name,
+        ];
+
+        // dd($reportDetail);
+
+        return Inertia::render('ReportDetail', ['reportDetail' => $reportDetail]);
     }
 
 

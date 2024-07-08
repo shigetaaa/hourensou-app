@@ -14,6 +14,7 @@ import theme from '../theme';
 type Reports = {
     id: number;
     username: string;
+    name: string;
     random_id: string;
     date: string;
     title: string;
@@ -62,8 +63,7 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
             <Head title="Welcome" />
             <Container maxW={{ base: "100%", md: "768px", lg: "1024px" }}>
                 <Flex direction="column" minHeight="100vh">
-
-                    <Box as="main" flex={1} p={5}>
+                    <Box as="main" flex={1}>
                         {/* キーボード操作のガイダンス */}
                         <VisuallyHidden>
                             <p>
@@ -73,7 +73,11 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
                         <Tabs>
                             <TabList>
                                 {groupNames.map((groupName) => (
-                                    <Tab key={groupName}>{groupName}</Tab>
+                                    <Tab key={groupName} fontWeight="medium">
+                                        <Text>
+                                            {groupName}
+                                        </Text>
+                                    </Tab>
                                 ))}
                             </TabList>
 
@@ -82,36 +86,41 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
                                     <TabPanel key={groupName}>
                                         <VStack align="stretch" spacing={4}>
                                             {groupReports[groupName].data.map((report) => (
-                                                <Box key={report.id} borderWidth="1px" borderRadius="lg" p={4}>
+                                                <Box key={report.id} borderColor="gray.500" borderWidth="1px" borderRadius="lg" p={4} bg="white">
                                                     <ChakraLink as={Link} href={`/reports/${report.username}/${groupReports[groupName].group_slug}/${report.id}`}>
-                                                        <Heading as="h3" size="md">{report.date}</Heading>
-                                                        <Text>{report.title}</Text>
+                                                        <Flex >
+                                                            <Text fontWeight="medium" bg="white">{report.date}</Text>
+                                                            <Text flex="1" bg="white" pl={4}>{report.name}</Text>
+                                                        </Flex>
+                                                        <Text py={1} bg="white">{report.title}</Text>
                                                     </ChakraLink>
                                                 </Box>
                                             ))}
                                         </VStack>
                                         <HStack spacing={4} mt={4}>
                                             {groupReports[groupName].links.prev && (
-                                                <ChakraLink
-                                                    as={Link}
+                                                <Link
                                                     href={groupReports[groupName].links.prev}
                                                     preserveState
                                                     preserveScroll
-                                                    only={[`groupReports.${groupName}`]}
+                                                    data={{
+                                                        group_id: groupReports[groupName].group_id
+                                                    }}
                                                 >
                                                     &laquo; 前のページ
-                                                </ChakraLink>
+                                                </Link>
                                             )}
                                             {groupReports[groupName].links.next && (
-                                                <ChakraLink
-                                                    as={Link}
+                                                <Link
                                                     href={groupReports[groupName].links.next}
                                                     preserveState
                                                     preserveScroll
-                                                    only={[`groupReports.${groupName}`]}
+                                                    data={{
+                                                        group_id: groupReports[groupName].group_id
+                                                    }}
                                                 >
                                                     次のページ &raquo;
-                                                </ChakraLink>
+                                                </Link>
                                             )}
                                         </HStack>
                                     </TabPanel>

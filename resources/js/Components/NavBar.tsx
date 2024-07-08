@@ -12,7 +12,7 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ auth }) => {
-  const username = auth?.user?.name;
+  const username = auth?.user?.username || '';
   const showLogo = useBreakpointValue({ base: false, md: true });
 
   return (
@@ -40,19 +40,19 @@ const NavBar: React.FC<NavBarProps> = ({ auth }) => {
                   aria-label="Options"
                   icon={<HamburgerIcon />}
                   variant="outline"
-                  color="gray.600"
-                  borderColor="gray.300"
+                  color="gray.900"
+                  borderColor="gray.500"
                   bg="white"
                   _hover={{ bg: 'gray.50' }}
                 />
                 <MenuList>
-                  <MenuItem as={Link} href={`/reports/${username}/create`}>
-                    新規投稿
+                  <MenuItem as={Link} href={`/dashboard`} p={4}>
+                    報告の管理
                   </MenuItem>
-                  <MenuItem as={Link} href={`/favorites/${username}`}>
+                  <MenuItem as={Link} href={`/favorites/${username}`} p={4}>
                     お気に入り
                   </MenuItem>
-                  <MenuItem as={Link} href="/logout">
+                  <MenuItem as={Link} href="/logout" p={4}>
                     ログアウト
                   </MenuItem>
                 </MenuList>

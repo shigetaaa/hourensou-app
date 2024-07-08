@@ -16,7 +16,7 @@ const theme = extendTheme({
       baseStyle: {
         w: '100%',
         maxW: 'container.lg',
-        px: { base: 4, md: 6, lg: 8 }, // 水平方向のパディング
+        px: { base: 0, md: 6, lg: 8 }, // 水平方向のパディング
       },
       sizes: {
         sm: {

@@ -1,6 +1,4 @@
 
-import '../../css/app.css';
-
 import DefaultLayout from '../Layouts/DefaultLayout';
 import React, { FC, useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
@@ -127,10 +125,6 @@ const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReport
                                 ))}
                             </TabPanels>
                         </Tabs>
-                    </Box>
-
-                    <Box as="footer" bg="gray.100" py={4}>
-                        <Text textAlign="center">&copy; 2024 レポートシステム. All rights reserved.</Text>
                     </Box>
                 </Flex>
             </Container>

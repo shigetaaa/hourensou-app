@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { ChakraProvider, Container, Box, Flex, HStack, Menu, MenuButton, MenuList, MenuItem, IconButton, Text, Button, useBreakpointValue } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
@@ -14,6 +14,12 @@ interface NavBarProps {
 const NavBar: React.FC<NavBarProps> = ({ auth }) => {
   const username = auth?.user?.username || '';
   const showLogo = useBreakpointValue({ base: false, md: true });
+
+  const handleLogout = () => {
+    if (confirm('ログアウトしますか？')) {
+      router.post(route('logout'));
+    }
+  };
 
   return (
     <ChakraProvider theme={theme}>
@@ -46,15 +52,24 @@ const NavBar: React.FC<NavBarProps> = ({ auth }) => {
                   _hover={{ bg: 'gray.50' }}
                 />
                 <MenuList>
-                  <MenuItem as={Link} href={`/dashboard`} p={4}>
-                    報告の管理
-                  </MenuItem>
-                  <MenuItem as={Link} href={`/favorites/${username}`} p={4}>
-                    お気に入り
-                  </MenuItem>
-                  <MenuItem as={Link} href="/logout" p={4}>
-                    ログアウト
-                  </MenuItem>
+                  {[
+                    { label: '報告の管理', href: '/dashboard' },
+                    { label: 'お気に入り', href: `/favorites/${username}` },
+                    { label: 'ログアウト', onClick: handleLogout }
+                  ].map((item) => (
+                    <MenuItem
+                      key={item.label}
+                      as={item.href ? Link : undefined}
+                      href={item.href}
+                      onClick={item.onClick}
+                      p={4}
+                      fontWeight="normal"
+                      justifyContent="flex-start"
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
+
                 </MenuList>
               </Menu>
             </HStack>
@@ -66,76 +81,3 @@ const NavBar: React.FC<NavBarProps> = ({ auth }) => {
 };
 
 export default NavBar;
-
-
-
-// import React from 'react';
-// import { Link } from '@inertiajs/react';
-// import { PageProps } from '@/types';
-// import { ChakraProvider, Container, Box, HStack, Menu, MenuButton, MenuList, MenuItem, IconButton, Text, Button, useBreakpointValue } from '@chakra-ui/react';
-// import { HamburgerIcon } from '@chakra-ui/icons';
-// import theme from '../theme';
-// import { InertiaLink } from '@inertiajs/inertia-react';
-// import ApplicationLogo from './ApplicationLogo';
-
-// interface NavBarProps {
-//   auth: PageProps['auth'];
-// }
-
-
-// const NavBar: React.FC<NavBarProps> = ({ auth }) => {
-//   const username = auth?.user?.name;
-//   const showLogo = useBreakpointValue({ base: false, md: true });
-
-//   return (
-//     <ChakraProvider theme={theme}>
-//       <Box bg="white" p={4} boxShadow="sm">
-//         <Container bg="white">
-//           <HStack bg="white" spacing={4} justifyContent="space-between">
-//             {showLogo && (
-//               <Link href="/">
-//                 <Box as={ApplicationLogo} h="9" w="auto" color="gray.800" bg="white" />
-//               </Link>
-//             )}
-//             <Box>
-//               <HStack bg="white" spacing={4}>
-
-//                 <Link href="/reports/${username}">
-//                   {auth?.user && <Text bg="white">{auth.user.name}</Text>}
-//                 </Link>
-//                 <Button as={InertiaLink} href={`/reports/${username}/create`} colorScheme="blue">
-//                   新規報告
-//                 </Button>
-//                 <Menu>
-//                   <MenuButton
-//                     as={IconButton}
-//                     aria-label="Options"
-//                     icon={<HamburgerIcon bg="white" />}
-//                     variant="outline"
-//                     color="gray.600"
-//                     borderColor="gray.300"
-//                     _hover={{ bg: 'gray.50' }}
-//                   />
-//                   <MenuList>
-//                     <MenuItem as={Link} href={`/reports/${username}/create`}>
-//                       新規投稿
-//                     </MenuItem>
-//                     <MenuItem as={Link} href={`/favorites/${username}`}>
-//                       お気に入り
-//                     </MenuItem>
-//                     <MenuItem as={Link} href="/logout">
-//                       ログアウト
-//                     </MenuItem>
-//                   </MenuList>
-//                 </Menu>
-//               </HStack>
-//             </Box>
-
-//           </HStack>
-//         </Container>
-//       </Box>
-//     </ChakraProvider>
-//   );
-// };
-
-// export default NavBar;

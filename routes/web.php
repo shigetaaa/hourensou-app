@@ -42,7 +42,7 @@ Route::get('/reports/{username}/create', [ReportController::class, 'createReport
 Route::post('/reports/{username}/{group_slug}', [ReportController::class, 'storeReport'])->name('reports.store');
 Route::get('/reports/{username}/{group_slug}/{id}/edit', [ReportController::class, 'editReport'])->name('reports.edit');
 Route::put('/reports/{username}/{group_slug}/{id}', [ReportController::class, 'updateReport'])->name('reports.update');
-Route::delete('/reports/{username}/{group_slug}/{id}/delete', [ReportController::class, 'deleteReport'])->name('reports.update');
+Route::delete('/reports/{username}/{group_slug}/{id}', [ReportController::class, 'deleteReport'])->name('reports.delete');
 
 //お気に入りの表示
 Route::get('/favorites/{username}', [ReportController::class, 'showFavorites'])->name('favorites');

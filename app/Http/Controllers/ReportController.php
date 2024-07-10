@@ -25,12 +25,12 @@ class ReportController extends Controller
     /**
      * すべての報告を表示
      */
-    public function showAllReports()
-    {
-        $report = new Report();
-        $allReports = $report->getAllReports();
-        return Inertia::render('Welcome', ['reports' => $allReports]);
-    }
+    // public function showAllReports()
+    // {
+    //     $report = new Report();
+    //     $allReports = $report->getAllReports();
+    //     return Inertia::render('Welcome', ['reports' => $allReports]);
+    // }
 
     /**
      * グループごとの報告を表示/ルートWelcomeページ
@@ -82,7 +82,7 @@ class ReportController extends Controller
     }
 
     /**
-     * 各ユーザーのごと報告を表示
+     * 各ユーザの報告を表示
      */
 
     //ルートパラメータを引数$usernameとして受け取る
@@ -105,11 +105,11 @@ class ReportController extends Controller
             // グループごとの報告取得
             $reports = $group->reports()->orderBy('date', 'desc')->paginate(5, ['*'], "page_{$group->id}", $page);
 
-            // $data = $reports->getCollection();
             $data = $reports->items();
 
             foreach ($data as $report) {
                 $report->username = $report->user->username;
+                $report->name = $report->user->name;
             }
 
             // Inertia使用：blade専用変数が使用できないので配列を定義
@@ -290,16 +290,65 @@ class ReportController extends Controller
             return Inertia::render('Error', ['message' => '編集できません。報告は作成者のみ編集できます。']);
         }
 
-        return Inertia::render('editReport', ['report' => $report]);
+        return Inertia::render('EditReport', ['report' => $report]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * 報告の更新
      */
-    public function update(Request $request, Report $report)
+    public function updateReport(Request $request, string $username, string $group_slug, $id)
     {
-        //
+        $user = auth()->user();
+
+        if (!$user || $user->username !== $username) {
+            return redirect()->route('login');
+        }
+
+        $report = Report::where('id', $id)
+            ->whereHas('user', function ($query) use ($username) {
+                $query->where('username', $username);
+            })
+            ->whereHas('group', function ($query) use ($group_slug) {
+                $query->where('group_slug', $group_slug);
+            })
+            ->firstOrFail();
+
+        if ($user->id !== $report->user_id) {
+            return Inertia::render('Error', ['message' => '更新権限がありません。']);
+        }
+
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'title' => 'required|max:255',
+            'what' => 'required',
+            'who' => 'required',
+            'when' => 'required',
+            'where' => 'required',
+            'memo' => 'nullable',
+            'reply_type' => 'required',
+            'reply_memo' => 'nullable',
+            'reply_limit' => 'nullable|date',
+            'is_published' => 'boolean',
+        ]);
+
+        $report->update($validatedData);
+        $report->is_report_published = $validatedData['is_published'];
+        $report->save();
+
+        $message = $report->is_report_published ? '報告を更新し、公開しました。' : '報告を更新し、下書き保存しました。';
+
+        return redirect()->route('report.detail', [
+            'username' => $username,
+            'group_slug' => $group_slug,
+            'id' => $report->id
+        ])->with('message', $message);
     }
+
+
+    // public function update(Request $request, Report $report)
+    // {
+    //     //
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -308,4 +357,34 @@ class ReportController extends Controller
     {
         //
     }
-}
+
+    /**
+     * 報告の削除
+     */
+    public function deleteReport(string $username, string $group_slug, $id)
+    {
+        $user = auth()->user();
+
+        if (!$user || $user->username !== $username) {
+            return redirect()->route('login');
+        }
+
+        $report = Report::where('id', $id)
+            ->whereHas('user', function ($query) use ($username) {
+                $query->where('username', $username);
+            })
+            ->whereHas('group', function ($query) use ($group_slug) {
+                $query->where('group_slug', $group_slug);
+            })
+            ->firstOrFail();
+
+        // ユーザーが報告の所有者であることを確認
+        if ($user->id !== $report->user_id) {
+            return Inertia::render('Error', ['message' => '削除権限がありません。']);
+        }
+
+        $report->delete();
+
+        return redirect()->route('dashboard')->with('message', '報告が削除されました');
+    }
+} // class ReportController終了

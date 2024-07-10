@@ -1,5 +1,5 @@
 
-import '../../css/app.css';
+// import '../../css/app.css';
 import DefaultLayout from '../Layouts/DefaultLayout';
 import React, { FC } from 'react';
 import { Link, Head } from '@inertiajs/react';

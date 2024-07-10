@@ -1,6 +1,13 @@
 import { extendTheme } from '@chakra-ui/react'
 
 const theme = extendTheme({
+  styles: {
+    global: {
+      body: {
+        bg: '#fffaf0',
+      },
+    },
+  },
   fonts: {
     heading: "'BIZ UDGothic', 'Hiragino Sans', 'Meiryo', sans-serif",
     body: "'BIZ UDGothic', 'Hiragino Sans', 'Meiryo', sans-serif",

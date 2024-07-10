@@ -1,7 +1,6 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import NavBar from '../Components/NavBar';
-import NavBarUnder from '../Components/NavBarUnder';
 import { ChakraProvider, Box } from '@chakra-ui/react';
 import theme from '../theme';
 import { PageProps } from '@/types';
@@ -17,7 +16,6 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children, title, auth }) 
       <Box>
         <Head title={title || 'アプリケーション'} />
         <NavBar auth={auth} />
-        {/* <NavBarUnder /> */}
         <Box p={4}>
           {children}
         </Box>

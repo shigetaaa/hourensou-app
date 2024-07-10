@@ -54,7 +54,7 @@ const NavBar: React.FC<NavBarProps> = ({ auth }) => {
                 <MenuList>
                   {[
                     { label: '報告の管理', href: '/dashboard' },
-                    { label: 'お気に入り', href: `/favorites/${username}` },
+                    { label: 'お気に入り', href: `/` },
                     { label: 'ログアウト', onClick: handleLogout }
                   ].map((item) => (
                     <MenuItem

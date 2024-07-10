@@ -345,10 +345,6 @@ class ReportController extends Controller
     }
 
 
-    // public function update(Request $request, Report $report)
-    // {
-    //     //
-    // }
 
     /**
      * Remove the specified resource from storage.

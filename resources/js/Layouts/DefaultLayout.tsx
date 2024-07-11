@@ -8,6 +8,7 @@ import { PageProps } from '@/types';
 interface DefaultLayoutProps extends PageProps {
   children: React.ReactNode;
   title?: string;
+  auth: PageProps['auth']; //追加：PagePropsからauthの方を取得
 }
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children, title, auth }) => {

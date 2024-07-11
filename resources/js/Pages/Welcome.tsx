@@ -34,6 +34,7 @@ type GroupReport = {
     data: Reports[];
     username: string;
     group_slug: string;
+    group_id: number; // 追加
     links: {
         prev: string;
         next: string;

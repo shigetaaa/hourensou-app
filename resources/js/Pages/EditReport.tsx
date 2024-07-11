@@ -7,18 +7,12 @@ import {
   Container, Heading, Box, Flex, Text, Input, Textarea, Select,
   Button, Checkbox,
 } from "@chakra-ui/react";
-import { PageProps } from '@/types';
+import { User, PageProps } from '@/types';
 
 interface Group {
   id: number;
   group_name: string;
   group_slug: string;
-}
-
-interface User {
-  id: number;
-  username: string;
-  name: string;
 }
 
 interface Report {

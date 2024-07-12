@@ -1,6 +1,3 @@
-import '../../css/app.css';
-import '../../css/welcome.css';
-
 import React, { FC, useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { PageProps } from '@/types';

@@ -14,12 +14,11 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 // 追加
 // only部分:使うものだけに後から調整する
-Route::resource('/', ReportController::class)
-    ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
-    ->middleware(['auth']);
+// Route::resource('/', ReportController::class)
+//     ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])
+//     ->middleware(['auth']);
 
 // ルートディレクトリ報告一覧表示
-// Route::get('/', [ReportController::class, 'showGroupReports'])->name('welcome');
 Route::get('/', [ReportController::class, 'showGroupReports'])
     ->middleware(['auth', 'verified'])
     ->name('welcome');

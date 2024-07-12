@@ -130,7 +130,8 @@ export default function Dashboard({ auth, authUserReports }: DashboardProps) {
                                             {authUserReports[groupName].links.prev && (
                                                 <ChakraLink
                                                     as={Link}
-                                                    href={authUserReports[groupName].links.prev}
+                                                    // href={authUserReports[groupName].links.prev}
+                                                    href={authUserReports[groupName].links.prev as string | undefined}
                                                     preserveState
                                                     preserveScroll
                                                     only={['authUserReports']}
@@ -141,7 +142,8 @@ export default function Dashboard({ auth, authUserReports }: DashboardProps) {
                                             {authUserReports[groupName].links.next && (
                                                 <ChakraLink
                                                     as={Link}
-                                                    href={authUserReports[groupName].links.next}
+                                                    // href={authUserReports[groupName].links.next}
+                                                    href={authUserReports[groupName].links.next as string | undefined}
                                                     preserveState
                                                     preserveScroll
                                                     only={['authUserReports']}

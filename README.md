@@ -1,66 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![ほうれんそうアプリ](public/images/hourensou_logo.svg)
 
-## About Laravel
+##　アクセシビリティ対応日報アプリ「ほうれんそう」
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+障がい者雇用や合理的配慮がすすむなか、課題となる「報告・連絡・相談」に特化したアプリです。
+当事者の働きやすさと、コミュニケーションに悩む会社の両方に役立ちます。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 使い方
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 最初にアクセスするURL
+https://shige-infra.info/login
 
-## Learning Laravel
+デモ用のユーザーは２名分あります。好きな方を使ってください。
+1.
+名前：田中花子
+ユーザ名：hanako
+ログインid : hanako
+パスワード : password
+2.
+名前：山田太郎
+ユーザ名：taro
+ログインid : taro
+パスワード : password
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+※新規ユーザーの登録や削除はまちがいを防ぐため管理者が行います。
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 新規投稿
+ナビゲーションの「新規投稿ボタン」から投稿してください
+![新規投稿](public/DocumentImages/createImage.png)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 編集
+右上の「ハンバーガーメニュー」→「報告の管理」→「各記事の編集ボタン」
+![編集](public/DocumentImages/editImage.png)
 
-## Laravel Sponsors
+### 削除
+右上の「ハンバーガーメニュー」→「報告の管理」→「各記事のメニュー」→「削除」
+![編集](public/DocumentImages/deleteImage.png)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
+##　特徴
+- かんたんに「報告（ほう）・連絡（れん）・相（そう）」ができる
+- 自動的に「2Ｈ5Ｗ」「ほうれんそう」のスキルがみにつく
+- 各障がいに対応（軽度知的/発達障害/視覚障害/色覚障害etc）
+読み上げ機能を主とした様々な機能に対応できる情報設計・デザイン・フロント実装
+- WCAG基準を目指します
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**かんたんに2Ｈ5Ｗ「報告（ほう）・連絡（れん）・相（そう）」ができる**
+ここに画像
+「自由にかけといわれても書きにくい」そんな声にお答えして、かんたんな項目別の入力にしました。
+2Ｈ5Ｗにそって毎日かけば仕事の基礎をみにつけることができます。
+![かんたん作成](public/DocumentImages/easyImage.png)
 
-## Contributing
+**各障害に対応したアクセシビリティ**
+＜軽度知的障害対応＞難読漢字は使わず、やさしい表現を採用。
+＜読字障害対応＞ＵＤフォントを採用した読みやすい字体
+＜発達障害対応＞意識の負担をおさえるノイズを抑えたデザイン
+＜視覚障がい対応＞５回のタブ移動で名前と新規投稿にたどりつくUX設計
+＜視覚障がい対応＞余計な情報が入らない読み上げ音声を実現するフロント実装
+＜視覚障がい対応＞超拡大に対応
+＜色覚障がい＞コントラストがわかりやすい色設計
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+※まだ完全ではないですが継続的に改善していく予定ですのでお待ちください
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 機能のロードマップ
 
-## Security Vulnerabilities
+ほうれんそうアプリは成長中のアプリです。継続的に機能を追加していく予定です。
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 日報機能
 
-## License
+- [ ] 投稿、編集、削除
+- [x] お気に入り機能
+- [x] 通知機能
+- [x] 既読機能
+- [x] 返信機能
+- [x] メールorLINE通知機能
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### アクセシビリティ
+
+- [ ] 漢字
+- [ ] UDフォント
+- [ ] 色
+- [ ] 音声読み上げ
+- [ ]タブ移動
+- [ ] 超拡大
+- [x] ダークモード
+
+## ライセンス
+
+ライセンスは開発者に帰属します。

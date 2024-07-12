@@ -34,7 +34,8 @@ const NavBar: React.FC<NavBarProps> = ({ auth }) => {
               )}
             </Box>
             <HStack spacing={4} bg="white">
-              <Link href={`/reports/${username}`}>
+              {/* <Link href={`/reports/${username}`}> */}
+              <Link href={`/`}>
                 {auth?.user && <Text bg="white">{auth.user.name}</Text>}
               </Link>
               <Button as={InertiaLink} href={`/reports/${username}/create`} colorScheme="blue">

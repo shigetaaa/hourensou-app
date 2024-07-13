@@ -1,12 +1,8 @@
-
 import DefaultLayout from '../Layouts/DefaultLayout';
 import React, { FC, useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import { InertiaLink } from '@inertiajs/inertia-react';
-import { ChakraProvider, Box, Container, Heading, Text, VStack, HStack, Link as ChakraLink, Flex, VisuallyHidden, Button } from '@chakra-ui/react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import theme from '../theme';
+
 
 
 type Reports = {
@@ -46,92 +42,170 @@ type GroupReports = {
 };
 
 
-
 const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReports }) => {
-    // デバッグ用
-    console.log(groupReports);
+    const groupNames = Object.keys(groupReports);
+    const [activeTab, setActiveTab] = useState(groupNames[0]); // 最初のグループをデフォルトで選択
 
     if (!groupReports) {
         return <div>報告はありません。</div>;
     }
 
-    const groupNames = Object.keys(groupReports);
-
     return (
         <DefaultLayout title="ホーム" auth={auth}>
             <Head title="Welcome" />
-            <Container maxW={{ base: "100%", md: "768px", lg: "1024px" }}>
-                <Flex direction="column" minHeight="100vh">
-                    <Box as="main" flex={1}>
-                        {/* キーボード操作のガイダンス */}
-                        <VisuallyHidden>
-                            <p>
-                                次にタブキーを押すと、タブパネルに移動します。読みたい地域グループを選べます。左右の矢印キーでタブを移動します。読みたい地域にきたらタブキーを押すと、その地域の報告一覧に移動します。報告のタイトルをクリックすると、詳細ページに移動します。
-                            </p>
-                        </VisuallyHidden>
-                        <Tabs>
-                            <TabList>
+            <div className="container mx-auto px-4 md:max-w-3xl lg:max-w-4xl">
+                <div className="flex flex-col min-h-screen">
+                    <main className="flex-1">
+                        <p className="sr-only">
+                            次にタブキーを押すと、タブパネルに移動します。読みたい地域グループを選べます。左右の矢印キーでタブを移動します。読みたい地域にきたらエンターキーを押すと、その地域の報告一覧に移動します。報告のタイトルをクリックすると、詳細ページに移動します。
+                        </p>
+                        <div className="mb-4">
+                            <div className="flex border-b border-gray-200">
                                 {groupNames.map((groupName) => (
-                                    <Tab key={groupName} fontWeight="medium">
-                                        <Text>
-                                            {groupName}
-                                        </Text>
-                                    </Tab>
+                                    <button
+                                        key={groupName}
+                                        onClick={() => setActiveTab(groupName)}
+                                        className={`px-4 py-2 font-medium text-lg focus:outline-none focus:text-blue-500 focus:border-blue-500 hover:text-blue-500 ${activeTab === groupName ? 'border-b-2 border-blue-500 text-blue-500' : ''
+                                            }`}
+                                    >
+                                        {groupName}
+                                    </button>
                                 ))}
-                            </TabList>
-
-                            <TabPanels>
-                                {groupNames.map((groupName) => (
-                                    <TabPanel key={groupName}>
-                                        <VStack align="stretch" spacing={4}>
-                                            {groupReports[groupName].data.map((report) => (
-                                                <Box key={report.id} borderColor="gray.500" borderWidth="1px" borderRadius="lg" p={4} bg="white">
-                                                    <ChakraLink as={Link} href={`/reports/${report.username}/${groupReports[groupName].group_slug}/${report.id}`}>
-                                                        <Flex >
-                                                            <Text fontWeight="medium" bg="white">{report.date}</Text>
-                                                            <Text flex="1" bg="white" pl={4}>{report.name}</Text>
-                                                        </Flex>
-                                                        <Text py={1} bg="white">{report.title}</Text>
-                                                    </ChakraLink>
-                                                </Box>
-                                            ))}
-                                        </VStack>
-                                        <HStack spacing={4} mt={4}>
-                                            {groupReports[groupName].links.prev && (
-                                                <Link
-                                                    href={groupReports[groupName].links.prev}
-                                                    preserveState
-                                                    preserveScroll
-                                                    data={{
-                                                        group_id: groupReports[groupName].group_id
-                                                    }}
-                                                >
-                                                    &laquo; 前のページ
-                                                </Link>
-                                            )}
-                                            {groupReports[groupName].links.next && (
-                                                <Link
-                                                    href={groupReports[groupName].links.next}
-                                                    preserveState
-                                                    preserveScroll
-                                                    data={{
-                                                        group_id: groupReports[groupName].group_id
-                                                    }}
-                                                >
-                                                    次のページ &raquo;
-                                                </Link>
-                                            )}
-                                        </HStack>
-                                    </TabPanel>
+                            </div>
+                            <div className="mt-4">
+                                {groupReports[activeTab].data.map((report) => (
+                                    <div key={report.id} className="border border-gray-500 rounded-lg p-4 bg-white mb-4">
+                                        <Link href={`/reports/${report.username}/${groupReports[activeTab].group_slug}/${report.id}`}>
+                                            <div className="flex">
+                                                <span className="font-medium bg-white">{report.date}</span>
+                                                <span className="flex-1 bg-white pl-4">{report.name}</span>
+                                            </div>
+                                            <p className="py-1 bg-white">{report.title}</p>
+                                        </Link>
+                                    </div>
                                 ))}
-                            </TabPanels>
-                        </Tabs>
-                    </Box>
-                </Flex>
-            </Container>
+                                <div className="flex space-x-4 mt-4">
+                                    {groupReports[activeTab].links.prev && (
+                                        <Link
+                                            href={groupReports[activeTab].links.prev}
+                                            preserveState
+                                            preserveScroll
+                                            data={{
+                                                group_id: groupReports[activeTab].group_id
+                                            }}
+                                            className="text-blue-500 hover:text-blue-700"
+                                        >
+                                            &laquo; 前のページ
+                                        </Link>
+                                    )}
+                                    {groupReports[activeTab].links.next && (
+                                        <Link
+                                            href={groupReports[activeTab].links.next}
+                                            preserveState
+                                            preserveScroll
+                                            data={{
+                                                group_id: groupReports[activeTab].group_id
+                                            }}
+                                            className="text-blue-500 hover:text-blue-700"
+                                        >
+                                            次のページ &raquo;
+                                        </Link>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
         </DefaultLayout>
     );
 };
 
-
 export default Welcome;
+
+
+
+// const Welcome = ({ auth, groupReports }: PageProps & { groupReports: GroupReports }) => {
+//     console.log(groupReports);
+
+//     if (!groupReports) {
+//         return <div>報告はありません。</div>;
+//     }
+
+//     const groupNames = Object.keys(groupReports);
+
+//     return (
+//         <DefaultLayout title="ホーム" auth={auth}>
+//             <Head title="Welcome" />
+//             <div className="container mx-auto px-4 md:max-w-3xl lg:max-w-4xl">
+//                 <div className="flex flex-col min-h-screen">
+//                     <main className="flex-1">
+//                         {/* キーボード操作のガイダンス */}
+//                         <p className="sr-only">
+//                             次にタブキーを押すと、タブパネルに移動します。読みたい地域グループを選べます。左右の矢印キーでタブを移動します。読みたい地域にきたらタブキーを押すと、その地域の報告一覧に移動します。報告のタイトルをクリックすると、詳細ページに移動します。
+//                         </p>
+//                         <div className="mb-4">
+//                             <div className="flex border-b border-gray-200">
+//                                 {groupNames.map((groupName) => (
+//                                     <button
+//                                         key={groupName}
+//                                         className="px-4 py-2 font-medium text-sm focus:outline-none focus:text-blue-500 focus:border-blue-500 hover:text-blue-500"
+//                                     >
+//                                         {groupName}
+//                                     </button>
+//                                 ))}
+//                             </div>
+//                             <div className="mt-4">
+//                                 {groupNames.map((groupName) => (
+//                                     <div key={groupName} className="space-y-4">
+//                                         {groupReports[groupName].data.map((report) => (
+//                                             <div key={report.id} className="border border-gray-500 rounded-lg p-4 bg-white">
+//                                                 <Link href={`/reports/${report.username}/${groupReports[groupName].group_slug}/${report.id}`}>
+//                                                     <div className="flex">
+//                                                         <span className="font-medium bg-white">{report.date}</span>
+//                                                         <span className="flex-1 bg-white pl-4">{report.name}</span>
+//                                                     </div>
+//                                                     <p className="py-1 bg-white">{report.title}</p>
+//                                                 </Link>
+//                                             </div>
+//                                         ))}
+//                                         <div className="flex space-x-4 mt-4">
+//                                             {groupReports[groupName].links.prev && (
+//                                                 <Link
+//                                                     href={groupReports[groupName].links.prev}
+//                                                     preserveState
+//                                                     preserveScroll
+//                                                     data={{
+//                                                         group_id: groupReports[groupName].group_id
+//                                                     }}
+//                                                     className="text-blue-500 hover:text-blue-700"
+//                                                 >
+//                                                     &laquo; 前のページ
+//                                                 </Link>
+//                                             )}
+//                                             {groupReports[groupName].links.next && (
+//                                                 <Link
+//                                                     href={groupReports[groupName].links.next}
+//                                                     preserveState
+//                                                     preserveScroll
+//                                                     data={{
+//                                                         group_id: groupReports[groupName].group_id
+//                                                     }}
+//                                                     className="text-blue-500 hover:text-blue-700"
+//                                                 >
+//                                                     次のページ &raquo;
+//                                                 </Link>
+//                                             )}
+//                                         </div>
+//                                     </div>
+//                                 ))}
+//                             </div>
+//                         </div>
+//                     </main>
+//                 </div>
+//             </div>
+//         </DefaultLayout>
+//     );
+// };
+
+// export default Welcome;

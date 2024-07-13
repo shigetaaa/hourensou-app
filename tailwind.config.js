@@ -13,7 +13,12 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: [
+                    'BIZ UDGothic',
+                    'Hiragino Sans',
+                    'Meiryo',
+                    ...defaultTheme.fontFamily.sans
+                ],
             },
         },
     },

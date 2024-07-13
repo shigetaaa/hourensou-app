@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import { InertiaLink } from '@inertiajs/inertia-react';
+// import { InertiaLink } from '@inertiajs/inertia-react';
 
 
 type Reports = {
@@ -62,10 +62,10 @@ const UserReports: React.FC<UserReportsProps> = ({ usersGroupReports }) => {
                     ))}
                     <div>
                         {groupReport.links.prev && (
-                            <InertiaLink href={groupReport.links.prev}>&laquo; 前のページ</InertiaLink>
+                            <Link href={groupReport.links.prev}>&laquo; 前のページ</Link>
                         )}
                         {groupReport.links.next && (
-                            <InertiaLink href={groupReport.links.next}>次のページ &raquo;</InertiaLink>
+                            <Link href={groupReport.links.next}>次のページ &raquo;</Link>
                         )}
                     </div>
                 </div>

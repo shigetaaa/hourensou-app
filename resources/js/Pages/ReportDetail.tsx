@@ -1,11 +1,7 @@
-
-// import '../../css/app.css';
 import DefaultLayout from '../Layouts/DefaultLayout';
 import React, { FC } from 'react';
 import { Link, Head } from '@inertiajs/react';
-import { ChakraProvider, Container, Heading, Box, Flex, Text } from "@chakra-ui/react";
 import { PageProps } from '@/types';
-import theme from '../theme';
 
 // 型定義
 export type Reports = {
@@ -28,29 +24,6 @@ export type Reports = {
     group_slug: string;
     group_name: string;
   };
-};
-
-// 共通スタイル
-const commonFlexStyle = {
-  direction: { base: "column", lg: "row" } as const,
-  borderBottom: "1px solid",
-  borderColor: "gray.100",
-};
-
-const labelStyle = {
-  w: { base: '100%', lg: '200px' },
-  // bg: '#efddd8',
-  bg: '#f7e8e7',
-  fontWeight: "bold",
-  py: 4,
-  px: 3,
-};
-
-const contentStyle = {
-  flex: "1",
-  bg: "white",
-  py: 4,
-  px: 3,
 };
 
 const ReportDetail: FC<{ reportDetail?: { data: Reports; group_name: string; name: string }; auth: PageProps['auth'] }> = ({ reportDetail, auth }) => {
@@ -76,86 +49,56 @@ const ReportDetail: FC<{ reportDetail?: { data: Reports; group_name: string; nam
   return (
     <DefaultLayout auth={auth}>
       <Head title={`${report.title} - ${reportDetail.group_name}`} />
-      <Container maxW={{ base: "100%", md: "768px", lg: "1024px" }}>
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <main>
-          <Box maxW="100%" mx="auto" p={5}>
+          <div className="max-w-full mx-auto p-5">
             <header>
-              <Box
-                textAlign="center"
-                mb={5}
-                w={{ base: '95%', md: '80%', lg: '800px' }}
-                mx="auto"
-              >
-                <Heading
-                  as="h1"
-                  fontSize={{ base: "xl", md: "2xl" }}
-                  fontWeight="bold"
-                  tabIndex={0}
-                  py={2}
-                >{report.title}</Heading>
-                <Text tabIndex={0}>{reportDetail.name}</Text>
-              </Box>
+              <div className="text-center mb-5 w-full md:w-4/5 lg:w-3/4 mx-auto">
+                <h1 tabIndex={0} className="text-xl md:text-2xl font-bold py-2 tabindex-0">{report.title}</h1>
+                <p tabIndex={0}>{reportDetail.name}</p>
+              </div>
             </header>
 
             <section aria-label="報告詳細" tabIndex={0}>
-              <Flex direction="column">
-                <Flex {...commonFlexStyle} borderTop="1px solid" borderTopColor="gray.200">
-                  <Text {...labelStyle}>グループ名</Text>
-                  <Text {...contentStyle}>{reportDetail.group_name}</Text>
-                </Flex>
-                <Flex {...commonFlexStyle}>
-                  <Text {...labelStyle}>日付</Text>
-                  <Text {...contentStyle}>{report.date}</Text>
-                </Flex>
-                <Flex {...commonFlexStyle}>
-                  <Text {...labelStyle}>何をしましたか?</Text>
-                  <Text {...contentStyle}>{report.what}</Text>
-                </Flex>
-                <Flex {...commonFlexStyle}>
-                  <Text {...labelStyle}>だれが?</Text>
-                  <Text {...contentStyle}>{report.who}</Text>
-                </Flex>
-                <Flex {...commonFlexStyle}>
-                  <Text {...labelStyle}>いつ?</Text>
-                  <Text {...contentStyle}>{report.when}</Text>
-                </Flex>
-                <Flex {...commonFlexStyle}>
-                  <Text {...labelStyle}>どこで?</Text>
-                  <Text {...contentStyle}>{report.where}</Text>
-                </Flex>
-                <Flex {...commonFlexStyle}>
-                  <Text {...labelStyle}>何でも書いてください</Text>
-                  <Text {...contentStyle}>{report.memo}</Text>
-                </Flex>
-                <Flex {...commonFlexStyle}>
-                  <Text {...labelStyle}>リーダーにどうしてほしいか</Text>
-                  <Text {...contentStyle}>{getReplyTypeText(report.reply_type)}</Text>
-                </Flex>
-              </Flex>
+              <div className="flex flex-col">
+                {[
+                  { label: 'グループ名', content: reportDetail.group_name },
+                  { label: '日付', content: report.date },
+                  { label: '何をしましたか?', content: report.what },
+                  { label: 'だれが?', content: report.who },
+                  { label: 'いつ?', content: report.when },
+                  { label: 'どこで?', content: report.where },
+                  { label: '何でも書いてください', content: report.memo },
+                  { label: 'リーダーにどうしてほしいか', content: getReplyTypeText(report.reply_type) },
+                ].map((item, index) => (
+                  <div key={index} className="flex flex-col md:flex-row border-b border-gray-200 last:border-b-0">
+                    <div className="w-full md:w-[300px] bg-[#f7e8e7] font-bold py-4 px-3">
+                      {item.label}
+                    </div>
+                    <div className="w-full md:w-[calc(100%-300px)] bg-white py-4 px-3">
+                      {item.content}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </section>
 
             <section aria-label="リーダーの返信" tabIndex={0}>
-              <Box
-                textAlign="center"
-                p={4}
-                w={{ base: '95%', md: '80%', lg: '800px' }}
-                mx="auto">
-                <Heading
-                  as="h2"
-                  fontSize={{ base: "xl", md: "2xl" }}
-                  fontWeight="bold"
-                >返信</Heading>
-              </Box>
-              <Flex {...commonFlexStyle} borderTop="1px solid" borderTopColor="gray.200">
-                <Text {...labelStyle} bg='#d3e9f2'>リーダーの返信</Text>
-                <Text {...contentStyle}>
+              <div className="text-center p-4 w-full md:w-4/5 lg:w-3/4 mx-auto">
+                <h2 className="text-xl md:text-2xl font-bold">返信</h2>
+              </div>
+              <div className="flex flex-col md:flex-row border-t border-gray-200">
+                <div className="w-full md:w-[300px] bg-[#d3e9f2] font-bold py-4 px-3">
+                  リーダーの返信
+                </div>
+                <div className="w-full md:w-[calc(100%-300px)] bg-white py-4 px-3">
                   {report.is_reply_published ? report.reply_content : "返信はまだです。"}
-                </Text>
-              </Flex>
+                </div>
+              </div>
             </section>
-          </Box>
+          </div>
         </main>
-      </Container>
+      </div>
     </DefaultLayout>
   );
 };

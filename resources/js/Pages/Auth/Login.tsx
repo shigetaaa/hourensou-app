@@ -1,21 +1,13 @@
-
 import { useEffect, FormEventHandler } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import {
-    Box,
-    Button,
-    Checkbox,
-    FormControl,
-    FormLabel,
-    Input,
-    VStack,
-    Text,
-    Flex,
-    useColorModeValue,
-    Heading,
-} from '@chakra-ui/react';
-import LoginLayout from '@/Layouts/LoginLayout';
+// import LoginLayout from '@/Layouts/LoginLayout';
+import GuestLayout from '@/Layouts/GuestLayout';
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import PrimaryButton from '@/Components/PrimaryButton';
+import TextInput from '@/Components/TextInput';
+import Checkbox from '@/Components/Checkbox';
 
 export default function Login({ status, canResetPassword }: { status?: string, canResetPassword: boolean }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -35,76 +27,66 @@ export default function Login({ status, canResetPassword }: { status?: string, c
         post(route('login'));
     };
 
-    const bgColor = useColorModeValue('white', 'gray.700');
-    const textColor = useColorModeValue('gray.600', 'gray.200');
-
     return (
-        <LoginLayout>
+        <GuestLayout>
             <Head title="ログイン" />
-            <Box
-                flex="1"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                py={8}
-
-            >
-                <Box as={ApplicationLogo} h="9" w="auto" color="gray.800" />
-            </Box>
-            <Box bg={bgColor} p={8} rounded="lg" shadow="md" w="full" maxW="md">
-                <Heading size="sm" textAlign="center" mb={8}>
+            <div className="flex-1 flex justify-center items-center py-8">
+                <ApplicationLogo className="w-auto h-9 text-gray-800" />
+            </div>
+            <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+                <h2 className="text-sm font-semibold text-center mb-8">
                     ログインをしてください
-                </Heading>
-                {status && <Text color="green.500" mb={4}>{status}</Text>}
+                </h2>
+                {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
                 <form onSubmit={submit}>
-                    <VStack spacing={4}>
-                        <FormControl isInvalid={!!errors.login_id}>
-                            <FormLabel htmlFor="login_id">ユーザーID</FormLabel>
-                            <Input
-                                id="login_id"
-                                type="text"
-                                name="user_id"
-                                value={data.login_id}
-                                onChange={(e) => setData('login_id', e.target.value)}
-                                autoComplete="username"
+                    <div>
+                        <InputLabel htmlFor="login_id" value="ユーザーID" />
+                        <TextInput
+                            id="login_id"
+                            type="text"
+                            name="login_id"
+                            value={data.login_id}
+                            className="mt-1 block w-full"
+                            autoComplete="username"
+                            isFocused={true}
+                            onChange={(e) => setData('login_id', e.target.value)}
+                        />
+                        <InputError message={errors.login_id} className="mt-2" />
+                    </div>
+
+                    <div className="mt-4">
+                        <InputLabel htmlFor="password" value="パスワード" />
+                        <TextInput
+                            id="password"
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            className="mt-1 block w-full"
+                            autoComplete="current-password"
+                            onChange={(e) => setData('password', e.target.value)}
+                        />
+                        <InputError message={errors.password} className="mt-2" />
+                    </div>
+
+                    <div className="block mt-4">
+                        <label className="flex items-center">
+                            <Checkbox
+                                name="remember"
+                                checked={data.remember}
+                                onChange={(e) => setData('remember', e.target.checked)}
                             />
-                            {errors.login_id && <Text color="red.500" fontSize="sm">{errors.login_id}</Text>}
-                        </FormControl>
+                            <span className="ms-2 text-sm text-gray-600">ログインしたままにする</span>
+                        </label>
+                    </div>
 
-                        <FormControl isInvalid={!!errors.password}>
-                            <FormLabel htmlFor="password">パスワード</FormLabel>
-                            <Input
-                                id="password"
-                                type="password"
-                                name="password"
-                                value={data.password}
-                                onChange={(e) => setData('password', e.target.value)}
-                                autoComplete="current-password"
-                            />
-                            {errors.password && <Text color="red.500" fontSize="sm">{errors.password}</Text>}
-                        </FormControl>
-
-                        <Checkbox
-                            isChecked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
-                        >
-                            <Text fontSize="sm" color={textColor}>ログイン状態を保持する</Text>
-                        </Checkbox>
-
-                        <Button
-                            type="submit"
-                            colorScheme="blue"
-                            width="full"
-                            isLoading={processing}
-                            loadingText="ログイン中..."
-                        >
+                    <div className="flex items-center justify-end mt-4">
+                        <PrimaryButton className="w-full" disabled={processing}>
                             ログイン
-                        </Button>
-                    </VStack>
+                        </PrimaryButton>
+                    </div>
                 </form>
-
-            </Box>
-        </LoginLayout>
+            </div>
+        </GuestLayout>
     );
 }

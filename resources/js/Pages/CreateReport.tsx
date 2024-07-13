@@ -1,11 +1,10 @@
-import React, { FC, useState } from 'react';
-import { Inertia } from '@inertiajs/inertia';
+
+import React, { FC, useState, FormEventHandler } from 'react';
+// import { Inertia } from '@inertiajs/inertia';
+// import { InertiaFormProps } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import DefaultLayout from '../Layouts/DefaultLayout';
 import { Head } from '@inertiajs/react';
-import {
-  Container, Heading, Box, Flex, Text, Input, Textarea, Select,
-  Button, VStack, Checkbox, Center,
-} from "@chakra-ui/react";
 import { PageProps } from '@/types';
 
 interface Group {
@@ -25,8 +24,25 @@ interface Props extends PageProps {
   groups: Group[];
 }
 
+interface FormData {
+  date: string;
+  title: string;
+  what: string;
+  who: string;
+  when: string;
+  where: string;
+  memo: string;
+  reply_type: string;
+  reply_memo: string;
+  reply_limit: string;
+  is_published: boolean;
+  group_slug: string;
+}
+
+type FormDataConvertible = string | number | boolean | File | null | undefined;
+
 const CreateReport: FC<Props> = ({ user, groups, auth }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     date: '',
     title: '',
     what: '',
@@ -47,149 +63,130 @@ const CreateReport: FC<Props> = ({ user, groups, auth }) => {
     setFormData(prev => ({ ...prev, [name]: newValue }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     const url = `/reports/${user.username}/${formData.group_slug}`;
-    Inertia.post(url, formData);
+
+    const payload: Record<string, FormDataConvertible> = {
+      ...formData,
+      is_published: formData.is_published ? '1' : '0',
+    };
+
+    router.post(url, payload);
   };
 
-  // 共通スタイリング
-  const commonFlexStyle = {
-    direction: { base: "column", lg: "row" } as const,
-    minHeight: "64px",
-    alignItems: { base: "stretch", lg: "center" },
-    gap: { base: 2, lg: 0 },
-  };
-
-  const labelStyle = {
-    w: { base: '100%', lg: '200px' },
-    fontWeight: "bold",
-    py: { base: 2, lg: 4 },
-    px: 3,
-    height: { base: "auto", lg: "100%" },
-    display: "flex",
-    alignItems: "center",
-  };
-
-  const inputStyle = {
-    flex: "1",
-    bg: "white",
-    display: "flex",
-    alignItems: "center",
-    minHeight: "100%",
-    width: "100%",
-    ml: { base: 0, lg: 4 },
-  };
+  const formFields = [
+    { label: '日付', name: 'date', type: 'date' },
+    { label: 'タイトル', name: 'title', type: 'text' },
+    { label: '何をしていますか？またはしましたか？', name: 'what', type: 'textarea' },
+    { label: 'だれが？', name: 'who', type: 'text' },
+    { label: 'いつ？', name: 'when', type: 'text' },
+    { label: 'どこで？', name: 'where', type: 'text' },
+    { label: '何でも書いてください', name: 'memo', type: 'textarea' },
+    {
+      label: 'リーダーにどうしてほしいか選んでください',
+      name: 'reply_type',
+      type: 'select',
+      options: [
+        { id: 1, name: '確認だけでOK', value: '1' },
+        { id: 2, name: '返事がほしい', value: '2' },
+        { id: 3, name: 'わからない、少し困っている', value: '3' },
+      ]
+    },
+    { label: 'どの事への返事がほしいですか？', name: 'reply_memo', type: 'textarea' },
+    { label: 'いつまでに返事がほしいですか？', name: 'reply_limit', type: 'date' },
+  ];
 
   return (
-    <DefaultLayout auth={auth} >
+    <DefaultLayout auth={auth}>
       <Head title="報告を作る" />
-      <Container maxW={{ base: "100%", md: "768px", lg: "1024px" }} >
-        <Box maxW="100%" mx="auto"  >
-          <Heading as="h1" fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={5} textAlign="center">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-xl md:text-2xl font-bold mb-5 text-center">
             報告を作る
-          </Heading>
-          <form onSubmit={handleSubmit} >
-            <Flex {...commonFlexStyle} borderTop="1px solid" borderTopColor="gray.300">
-              <Text {...labelStyle}>グループ</Text>
-              <Box {...inputStyle}>
-                <Select w="100%" name="group_slug" value={formData.group_slug} onChange={handleChange} required bg="white">
+          </h1>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex flex-col md:flex-row border-t border-gray-300">
+              <div className="w-full md:w-[200px] font-bold py-2 md:py-4 px-3">
+                グループ
+              </div>
+              <div className="w-full md:w-[calc(100%-200px)] bg-white py-2 md:py-4 px-3">
+                <select
+                  name="group_slug"
+                  value={formData.group_slug}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
                   <option value="">選択してください</option>
                   {groups.map((group) => (
                     <option key={group.id} value={group.group_slug}>{group.group_name}</option>
                   ))}
-                </Select>
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>日付</Text>
-              <Box {...inputStyle}>
-                <Input w="100%" type="date" name="date" value={formData.date} onChange={handleChange} required />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>タイトル</Text>
-              <Box {...inputStyle}>
-                <Input w="100%" type="text" name="title" value={formData.title} onChange={handleChange} required />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>何をしていますか？またはしましたか？</Text>
-              <Box {...inputStyle}>
-                <Textarea w="100%" name="what" value={formData.what} onChange={handleChange} required />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>だれが？</Text>
-              <Box {...inputStyle}>
-                <Input w="100%" type="text" name="who" value={formData.who} onChange={handleChange} required />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>いつ？</Text>
-              <Box {...inputStyle}>
-                <Input w="100%" type="text" name="when" value={formData.when} onChange={handleChange} required />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>どこで？</Text>
-              <Box {...inputStyle}>
-                <Input w="100%" type="text" name="where" value={formData.where} onChange={handleChange} required />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>何でも書いてください</Text>
-              <Box {...inputStyle}>
-                <Textarea w="100%" name="memo" value={formData.memo} onChange={handleChange} />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>リーダーにどうしてほしいか選んでください</Text>
-              <Box {...inputStyle}>
-                <Select w="100%" name="reply_type" value={formData.reply_type} onChange={handleChange} required bg="white">
-                  <option value="1">確認だけでOK</option>
-                  <option value="2">返事がほしい</option>
-                  <option value="3">わからない、少し困っている</option>
-                </Select>
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>どの事への返事がほしいですか？</Text>
-              <Box {...inputStyle}>
-                <Textarea w="100%" name="reply_memo" value={formData.reply_memo} onChange={handleChange} />
-              </Box>
-            </Flex>
-            <Flex {...commonFlexStyle}>
-              <Text {...labelStyle}>いつまでに返事がほしいですか？</Text>
-              <Box {...inputStyle}>
-                <Input w="100%" type="date" name="reply_limit" value={formData.reply_limit} onChange={handleChange} />
-              </Box>
-            </Flex>
-            <Flex justifyContent="center" p={6}>
-              <Box>
-                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    name="is_published"
-                    checked={formData.is_published}
-                    onChange={handleChange}
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      marginRight: '8px',
-                      cursor: 'pointer'
-                    }}
-                  />
-                  <Text fontSize="lg" fontWeight="medium">公開する</Text>
-                </label>
-              </Box>
-            </Flex>
-            <Button type="submit" colorScheme="blue" size="lg" width="100%">
+                </select>
+              </div>
+            </div>
+
+            {formFields.map((field, index) => (
+              <div key={index} className="flex flex-col md:flex-row border-t border-gray-300">
+                <div className="w-full md:w-[200px] font-bold py-2 md:py-4 px-3">
+                  {field.label}
+                </div>
+                <div className="w-full md:w-[calc(100%-200px)] bg-white py-2 md:py-4 px-3">
+                  {field.type === 'select' ? (
+                    <select
+                      name={field.name}
+                      value={formData[field.name as keyof FormData] as string}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 border border-gray-300 rounded"
+                    >
+                      {field.options?.map((option) => (
+                        <option key={option.id} value={option.value}>{option.name}</option>
+                      ))}
+                    </select>
+                  ) : field.type === 'textarea' ? (
+                    <textarea
+                      name={field.name}
+                      value={formData[field.name as keyof FormData] as string}
+                      onChange={handleChange}
+                      required={field.name !== 'memo' && field.name !== 'reply_memo'}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
+                  ) : (
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      value={formData[field.name as keyof FormData] as string}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+
+            <div className="flex justify-center p-6">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="is_published"
+                  checked={formData.is_published}
+                  onChange={handleChange}
+                  className="w-6 h-6 mr-2 cursor-pointer"
+                />
+                <span className="text-lg font-medium">公開する</span>
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
               {formData.is_published ? '公開して保存' : '下書きとして保存'}
-            </Button>
+            </button>
           </form>
-        </Box>
-      </Container>
+        </div>
+      </div>
     </DefaultLayout>
   );
 };

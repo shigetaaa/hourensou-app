@@ -1,7 +1,18 @@
+
+
 import React from 'react';
 
-export default function ApplicationLogo(props: React.ImgHTMLAttributes<HTMLImageElement>) {
+interface ApplicationLogoProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+    className?: string;
+}
+
+export default function ApplicationLogo({ className = '', ...props }: ApplicationLogoProps) {
     return (
-        <img src="/images/hourensou_logo.svg" alt="Application Logo" {...props} />
+        <img
+            // src="/images/hourensou_logo.svg"
+            alt="ほうれんそうロゴ"
+            className={className}
+            {...props}
+        />
     );
 }

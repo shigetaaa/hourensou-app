@@ -1,1 +1,0 @@
-import{S as t}from"./ApplicationLogo-B-JNm2Yu.js";import{f as o,j as s}from"./app-C50j80o8.js";var e=o((a,r)=>s.jsx(t,{align:"center",...a,direction:"column",ref:r}));e.displayName="VStack";export{e as V};

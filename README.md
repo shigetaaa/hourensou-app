@@ -85,7 +85,7 @@ https://shige-infra.info/login
 - [x] UDフォント
 - [x] 色
 - [x] 音声読み上げ
-- [x]タブ移動
+- [x] タブ移動
 - [x] 超拡大
 - [ ] ダークモード
 

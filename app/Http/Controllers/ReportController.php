@@ -383,4 +383,18 @@ class ReportController extends Controller
 
         return redirect()->route('dashboard')->with('message', '報告が削除されました');
     }
+
+    //  テスト用記事の表示（あとで消す）
+    public function TestShowReport()
+    {
+        return Inertia::render('TestShowReport');
+    }
+
+
+
+
+
+
+
+
 } // class ReportController終了

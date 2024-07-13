@@ -47,3 +47,7 @@ Route::delete('/reports/{username}/{group_slug}/{id}', [ReportController::class,
 Route::get('/favorites/{username}', [ReportController::class, 'showFavorites'])->name('favorites');
 
 require __DIR__ . '/auth.php';
+
+//テスト用記事の表示（あとで消す）
+Route::get('/test', [ReportController::class, 'TestShowReport'])
+    ->name('report.test');

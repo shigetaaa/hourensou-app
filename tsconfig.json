@@ -10,7 +10,7 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "noEmit": true,
-        "skipLibCheck": true, //AWSでエラーがでるためChakuraUIの型チェックを１時的に無効化
+        // "skipLibCheck": true, //AWSでエラーがでるためChakuraUIの型チェックを１時的に無効化
         "paths": {
             "@/*": [
                 "./resources/js/*"

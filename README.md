@@ -59,10 +59,10 @@ https://shige-infra.info/login
 - ＜色覚障がい＞メインのボタンに識別しやすい青、アラートにオレンジ（今後）を採用
 ![個別の記事画面](public/DocumentImages/main_img.png)
 
-＜視覚障がい対応＞2回のタブ移動で名前と新規投稿にたどりつくUX設計
+- ＜視覚障がい対応＞2回のタブ移動で名前と新規投稿にたどりつくUX設計
 ![個別の記事画面](public/DocumentImages/main_img.png)
 
-＜視覚障がい対応＞超拡大に対応
+- ＜視覚障がい対応＞超拡大に対応
 ![超拡大の画面](public/DocumentImages/kakudai_image.png)
 
 

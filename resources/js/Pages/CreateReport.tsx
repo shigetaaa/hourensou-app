@@ -1,7 +1,5 @@
 
 import React, { FC, useState, FormEventHandler } from 'react';
-// import { Inertia } from '@inertiajs/inertia';
-// import { InertiaFormProps } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
 import DefaultLayout from '../Layouts/DefaultLayout';
 import { Head } from '@inertiajs/react';

@@ -1,8 +1,6 @@
 import { useEffect, FormEventHandler } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-// import LoginLayout from '@/Layouts/LoginLayout';
 import GuestLayout from '@/Layouts/GuestLayout';
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -31,7 +29,7 @@ export default function Login({ status, canResetPassword }: { status?: string, c
         <GuestLayout>
             <Head title="ログイン" />
             <div className="flex-1 flex justify-center items-center py-8">
-                <ApplicationLogo className="w-auto h-9 text-gray-800" />
+                <p>ロゴ</p>
             </div>
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
                 <h2 className="text-sm font-semibold text-center mb-8">
